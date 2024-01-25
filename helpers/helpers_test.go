@@ -50,7 +50,10 @@ func TestValidate(t *testing.T) {
 		t.Run(test.desc, func(t *testing.T) {
 			g := gomega.NewWithT(t)
 
-			// test setip
+			// clean up first
+			os.Unsetenv(CsvFileEnvVar)
+			os.Unsetenv(APPIDEnvVar)
+			// test setup
 			if test.appID != "" {
 				os.Setenv(APPIDEnvVar, test.appID)
 			}
@@ -150,7 +153,7 @@ func TestParseRecords(t *testing.T) {
 	_ = os.Setenv(APPIDEnvVar, DummyAppID)
 	comment := "test comment"
 	testEntry1 := []string{"1", DummyUserID, DummyAppID, LaptopKey, comment}
-	testEntry2 := []string{"2", DummyUserID, DummyAppID, DesktopKey, comment}
+	testEntry2 := []string{"2", DummyUserID, DummyAppID, "DESKTOP", comment}
 	testEntry3 := []string{"3", DummyUserID, DummyAppID, DesktopKey, comment}
 	unwantedApp := []string{"3", DummyUserID, "123", LaptopKey, comment}
 	incompleteEntry := []string{"4", DummyUserID, DummyAppID, LaptopKey}

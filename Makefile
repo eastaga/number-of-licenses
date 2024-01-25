@@ -1,7 +1,7 @@
 all : build test
 
 test:
-	go test./helpers  -cover
+	go test ./helpers  -cover
 
 build: fmt clean
 	go build -o main main.go

@@ -36,34 +36,35 @@ func parseRecords(records [][]string) map[string]map[string]int {
 		if len(eachRecord) != 5 {
 			continue
 		}
-		computerID := eachRecord[0]
-		userID := eachRecord[1]
-		appID := eachRecord[2]
-		computerType := eachRecord[3]
+		var record Record
+		record.computerID = eachRecord[0]
+		record.userID = eachRecord[1]
+		record.appID = eachRecord[2]
+		record.computerType = eachRecord[3]
 
 		// Process only required appid
-		if appID != os.Getenv(APPIDEnvVar) {
-			log.Printf("skipping app id %s", appID)
+		if record.appID != os.Getenv(APPIDEnvVar) {
+			log.Printf("skipping app id %s", record.appID)
 			continue
 		}
 
 		// Don't process duplicate records
-		if _, ok := computerIDMap[computerID]; ok {
-			log.Printf("Computer ID %s already processed so skip it\n", computerID)
+		if _, ok := computerIDMap[record.computerID]; ok {
+			log.Printf("Computer ID %s already processed so skip it\n", record.computerID)
 			continue
 		}
 
-		computerIDMap[computerID] = struct{}{}
+		computerIDMap[record.computerID] = struct{}{}
 
 		machineCount := make(map[string]int)
 
-		if _, ok := userMachineMap[userID]; ok {
-			machineCount = userMachineMap[userID]
+		if _, ok := userMachineMap[record.userID]; ok {
+			machineCount = userMachineMap[record.userID]
 		}
 
-		computerTypeKey := strings.TrimSpace(computerType)
+		computerTypeKey := strings.TrimSpace(strings.ToLower(record.computerType))
 		machineCount[computerTypeKey]++
-		userMachineMap[userID] = machineCount
+		userMachineMap[record.userID] = machineCount
 	}
 	return userMachineMap
 }
